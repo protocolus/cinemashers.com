@@ -31,7 +31,7 @@ body {
     align-items: center;
     position: relative;
     padding-top: 0; /* Remove any top padding */
-    padding-bottom: 60px; /* Add space for footer */
+    /* No padding needed for footer anymore */
 }
 
 .container {
@@ -195,8 +195,8 @@ body {
 }
 
 #puzzle-screen.active {
-    min-height: 80vh; /* Make it taller */
-    height: 80vh; /* Fixed height to allow child elements to use percentage heights */
+    min-height: 100vh; /* Use full viewport height */
+    height: 100vh; /* Fixed height to allow child elements to use percentage heights */
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Pushes button to bottom */
