@@ -195,8 +195,8 @@ body {
 }
 
 #puzzle-screen.active {
-    min-height: 100vh; /* Use full viewport height */
-    height: 100vh; /* Fixed height to allow child elements to use percentage heights */
+    min-height: 98vh; /* Slightly smaller than full viewport height to prevent scrollbar */
+    height: 98vh; /* Fixed height but slightly reduced */
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Pushes button to bottom */
