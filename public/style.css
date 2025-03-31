@@ -1,0 +1,674 @@
+/* Base styling */
+:root {
+    --primary-color: #e50914; /* Netflix-inspired red */
+    --secondary-color: #141414;
+    --accent-color: #ffbe0b;
+    --text-color: #333;
+    --light-text: #fff;
+    --background-color: #f5f5f5;
+    --card-background: #fff;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-top: 0; /* Remove any top padding */
+    padding-bottom: 60px; /* Add space for footer */
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    padding: 0 20px;
+}
+
+/* Button styling */
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    outline: none;
+    font-size: 16px;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #ff0a16;
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #252525;
+}
+
+/* Screen styling */
+.screen {
+    display: none;
+    width: 90%;
+    max-width: 900px;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    background-color: #fff;
+    margin: 10px 0; /* Reduced from 20px to 10px to save space */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.screen.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Splash Screen */
+#splash-screen {
+    background-color: #fff;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.splash-header {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+#game-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: var(--primary-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.film-strip {
+    height: 20px;
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 40"><rect x="0" y="0" width="40" height="40" fill="%23333"/><rect x="50" y="0" width="40" height="40" fill="%23333"/><rect x="100" y="0" width="40" height="40" fill="%23333"/><rect x="150" y="0" width="40" height="40" fill="%23333"/><rect x="200" y="0" width="40" height="40" fill="%23333"/><rect x="250" y="0" width="40" height="40" fill="%23333"/><rect x="300" y="0" width="40" height="40" fill="%23333"/><rect x="350" y="0" width="40" height="40" fill="%23333"/><rect x="400" y="0" width="40" height="40" fill="%23333"/><rect x="450" y="0" width="40" height="40" fill="%23333"/></svg>');
+    background-repeat: repeat-x;
+    margin: 0 auto 30px;
+}
+
+.game-description {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #555;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rules-section {
+    background-color: #f9f9f9;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.rules-section h2 {
+    color: var(--secondary-color);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.game-rules {
+    list-style-type: none;
+    text-align: left;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.game-rules li {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 28px;
+    font-size: 1.1rem;
+}
+
+.game-rules li:last-child {
+    border-bottom: none;
+}
+
+.game-rules li:before {
+    content: "🎬";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+}
+
+.action-area {
+    margin: 35px 0;
+}
+
+/* Puzzle Screen */
+#puzzle-screen {
+    background-color: var(--card-background);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 5px; /* Reduced space at top */
+}
+
+#puzzle-screen.active {
+    min-height: 80vh; /* Make it taller */
+    height: 80vh; /* Fixed height to allow child elements to use percentage heights */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pushes button to bottom */
+}
+
+#puzzle-content {
+    text-align: left;
+    margin-bottom: 20px; /* Space above the button */
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Take up all available space */
+    overflow: hidden; /* Prevent content from overflowing */
+}
+
+#puzzle-clue,
+#puzzle-tagline,
+#puzzle-synopsis,
+#puzzle-credits {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+#puzzle-clue {
+    font-weight: bold;
+    color: #666;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.clue-pill {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1.2;
+}
+
+#puzzle-tagline {
+    font-style: italic;
+    color: #444;
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+}
+
+#puzzle-synopsis {
+    flex-grow: 1; /* This makes it fill the available space */
+    overflow-y: auto; /* In case of overflow */
+    margin-bottom: 20px;
+    font-size: 1.2rem; /* Increase font size */
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically if there's extra space */
+    min-height: 200px; /* Ensure minimum height */
+    padding: 20px;
+    background-color: rgba(245, 245, 245, 0.6);
+    border-radius: var(--border-radius);
+}
+
+/* Responsive font sizing for synopsis based on container height */
+@media screen and (min-height: 700px) {
+    #puzzle-synopsis {
+        font-size: 1.4rem;
+        min-height: 250px;
+    }
+}
+
+@media screen and (min-height: 900px) {
+    #puzzle-synopsis {
+        font-size: 1.6rem;
+        min-height: 350px;
+    }
+}
+
+/* Classes for different synopsis content lengths */
+#puzzle-synopsis.short-content {
+    font-size: 1.7rem;
+    line-height: 1.8;
+    justify-content: center;
+    padding: 20px 10px;
+}
+
+#puzzle-synopsis.medium-content {
+    font-size: 1.4rem;
+    line-height: 1.7;
+    justify-content: flex-start;
+    padding: 15px 10px;
+}
+
+#puzzle-synopsis.long-content {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+#puzzle-credits {
+    font-style: italic;
+    color: #555; /* Darker color for better visibility */
+    font-size: 14px;
+    margin-top: auto; /* Push to the bottom */
+    text-align: center;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin-bottom: 15px; /* Add space at bottom */
+    line-height: 1.5;
+    max-height: none; /* Ensure it's not being cut off */
+    display: block !important; /* Ensure visibility */
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    display: flex; /* Use flex to center content */
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    margin: auto;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: var(--primary-color);
+}
+
+/* Mashup title styling */
+.mashup-title {
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-top: 10px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eaeaea;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+}
+
+.answer-details h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.mashup-title-in-details {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.movie-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: var(--border-radius);
+}
+
+#answer-movie1,
+#answer-movie2 {
+    padding: 10px;
+    border-radius: var(--border-radius);
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+#answer-movie1 a,
+#answer-movie2 a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+#answer-movie1 a:hover,
+#answer-movie2 a:hover {
+    text-decoration: underline;
+    color: #ff0a16;
+}
+
+#next-puzzle-btn {
+    margin-top: 20px;
+}
+
+/* Answer container and poster styles */
+.answer-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.poster-container {
+    flex: 1;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#poster-image {
+    max-width: 100%;
+    max-height: 60vh;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    display: block;
+}
+
+.answer-details {
+    flex: 1;
+    padding: 20px 0;
+}
+
+.answer-details h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.movie-container {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: var(--border-radius);
+}
+
+.movie-container p {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.movie-container p:last-child {
+    margin-bottom: 0;
+}
+
+#answer-movie1, #answer-movie2 {
+    font-weight: 500;
+}
+
+#answer-movie1 a, #answer-movie2 a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+#answer-movie1 a:hover, #answer-movie2 a:hover {
+    text-decoration: underline;
+}
+
+/* Large screens (768px+) */
+@media screen and (min-width: 768px) {
+    .answer-container {
+        flex-direction: row;
+        gap: 30px;
+        align-items: flex-start;
+    }
+    
+    .poster-container {
+        flex: 2;
+        margin-bottom: 0;
+    }
+    
+    .answer-details {
+        flex: 1;
+        padding: 0;
+    }
+    
+    #poster-image {
+        max-height: 70vh;
+    }
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    font-size: 0.9rem;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    #game-title {
+        font-size: 2.5rem;
+    }
+    
+    .screen {
+        padding: 20px;
+    }
+    
+    .game-description {
+        font-size: 1rem;
+    }
+    
+    .game-rules li {
+        font-size: 1rem;
+    }
+    
+    #puzzle-tagline {
+        font-size: 18px;
+    }
+    
+    .mashup-title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    #game-title {
+        font-size: 2rem;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+    }
+    
+    #puzzle-synopsis {
+        font-size: 1rem;
+    }
+}
+
+/* PWA Styles */
+.install-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.install-button:hover {
+    background-color: #c10710;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.offline-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #ffcc00;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 1000;
+    display: none;
+}
+
+.offline-indicator.visible {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Media Queries for PWA and Mobile */
+@media (display-mode: standalone) {
+    /* Styles specific to when the app is installed and launched from home screen */
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
+
+@media (max-width: 480px) {
+    .puzzle-container {
+        padding: 10px;
+    }
+    
+    .clue {
+        font-size: 1.2rem;
+        padding: 10px;
+    }
+    
+    .buttons button {
+        padding: 10px 15px;
+        margin: 5px;
+    }
+    
+    .install-button {
+        bottom: 15px;
+        right: 15px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}

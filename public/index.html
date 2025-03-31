@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinemashers</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="A movie mashup puzzle game that challenges your film knowledge">
+    <meta name="theme-color" content="#e50914">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Cinemashers">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Fonts and Styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="splash-screen" class="screen active">
+        <div class="container">
+            <div class="splash-header">
+                <h1 id="game-title"></h1>
+                <div class="film-strip"></div>
+            </div>
+            
+            <div class="splash-content">
+                <p id="game-description" class="game-description"></p>
+                
+                <div class="rules-section">
+                    <h2>How to Play:</h2>
+                    <ul id="game-rules" class="game-rules"></ul>
+                </div>
+                
+                <div class="action-area">
+                    <button id="start-game-btn" class="btn btn-primary">Start Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="puzzle-screen" class="screen">
+        <div id="puzzle-content">
+            <p id="puzzle-clue"></p>
+            <p id="puzzle-tagline"></p>
+            <p id="puzzle-synopsis"></p>
+            <p id="puzzle-credits"></p>
+        </div>
+        <button id="reveal-answer-btn" class="btn btn-secondary">Reveal Answer</button>
+    </div>
+
+    <div id="answer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            
+            <div class="answer-container">
+                <div class="poster-container">
+                    <img id="poster-image" src="" alt="Movie Poster">
+                </div>
+                
+                <div class="answer-details">
+                    <h3 id="mashup-title" class="mashup-title-in-details"></h3>
+                    <h3>Original Movies:</h3>
+                    <div class="movie-container">
+                        <p id="answer-movie1"></p>
+                        <p id="answer-movie2"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="next-puzzle-btn" class="btn btn-primary">Next Puzzle</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Cinemashers &copy; 2025 | A fun movie mashup guessing game</p>
+    </footer>
+
+    <!-- Main Application Script -->
+    <script src="/script.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register the service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+        
+        // Add to Home Screen logic
+        let deferredPrompt;
+        const addBtn = document.createElement('button');
+        addBtn.classList.add('install-button');
+        addBtn.style.display = 'none';
+        addBtn.textContent = 'Install Cinemashers';
+        document.body.appendChild(addBtn);
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Update UI to notify the user they can add to home screen
+            addBtn.style.display = 'block';
+            
+            addBtn.addEventListener('click', () => {
+                // Hide our user interface that shows our A2HS button
+                addBtn.style.display = 'none';
+                // Show the prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the A2HS prompt');
+                    } else {
+                        console.log('User dismissed the A2HS prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

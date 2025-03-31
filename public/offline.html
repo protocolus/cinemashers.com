@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinemashers - Offline</title>
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --dark-bg: #141414;
+            --light-bg: #f5f5f5;
+            --light-text: #ffffff;
+            --dark-text: #333333;
+            --border-radius: 5px;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .offline-container {
+            max-width: 90%;
+            width: 500px;
+            padding: 30px;
+            margin: 20px;
+            background-color: rgba(40, 40, 40, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .retry-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+        
+        .retry-button:hover {
+            background-color: #c10710;
+            transform: translateY(-2px);
+        }
+        
+        .cached-puzzles {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+        }
+        
+        .puzzle-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        
+        .puzzle-list li {
+            margin-bottom: 10px;
+        }
+        
+        .puzzle-link {
+            color: var(--light-text);
+            text-decoration: none;
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+        
+        .puzzle-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="icon">📡</div>
+        <h1>You're Offline</h1>
+        <p>Looks like you don't have an internet connection right now. Some features of Cinemashers might not work properly.</p>
+        
+        <button class="retry-button" onclick="retryConnection()">Retry Connection</button>
+        
+        <div class="cached-puzzles" id="cached-puzzles">
+            <h2>Available Offline Puzzles</h2>
+            <p>These puzzles are available to play while you're offline:</p>
+            <ul class="puzzle-list" id="puzzle-list">
+                <!-- Cached puzzles will be listed here -->
+                <li>Loading cached puzzles...</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Function to retry connection
+        function retryConnection() {
+            window.location.reload();
+        }
+        
+        // Display cached puzzles
+        document.addEventListener('DOMContentLoaded', () => {
+            const puzzleList = document.getElementById('puzzle-list');
+            
+            try {
+                const cachedData = localStorage.getItem('cachedPuzzles');
+                if (cachedData) {
+                    const cachedPuzzles = JSON.parse(cachedData);
+                    const puzzleIds = Object.keys(cachedPuzzles);
+                    
+                    if (puzzleIds.length > 0) {
+                        puzzleList.innerHTML = '';
+                        
+                        puzzleIds.forEach(id => {
+                            const li = document.createElement('li');
+                            const a = document.createElement('a');
+                            a.href = `/puzzle/${id}`;
+                            a.className = 'puzzle-link';
+                            a.textContent = `Puzzle #${id}`;
+                            li.appendChild(a);
+                            puzzleList.appendChild(li);
+                        });
+                    } else {
+                        puzzleList.innerHTML = '<li>No cached puzzles available</li>';
+                    }
+                } else {
+                    puzzleList.innerHTML = '<li>No cached puzzles available</li>';
+                }
+            } catch (e) {
+                console.error('Error loading cached puzzles:', e);
+                puzzleList.innerHTML = '<li>Error loading cached puzzles</li>';
+            }
+        });
+    </script>
+</body>
+</html>

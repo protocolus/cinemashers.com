@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinemashers Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Cinemashers Admin Panel</h1>
+            <div class="nav-buttons">
+                <button id="puzzles-btn" class="active">Puzzles</button>
+                <button id="posters-btn">Posters</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="loading" class="loading-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Puzzles Section -->
+        <section id="puzzles-section" class="section active">
+            <div class="section-header">
+                <h2>All Puzzles</h2>
+                <div class="search-box">
+                    <input type="text" id="puzzle-search" placeholder="Search puzzles...">
+                </div>
+            </div>
+            
+            <div class="puzzle-list-container">
+                <table id="puzzles-table" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Mashup Title</th>
+                            <th>Clue</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="puzzles-list">
+                        <!-- Puzzles will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Posters Section -->
+        <section id="posters-section" class="section">
+            <div class="section-header">
+                <h2>All Posters</h2>
+                <div class="search-box">
+                    <input type="text" id="poster-search" placeholder="Search posters...">
+                </div>
+            </div>
+            
+            <div class="poster-grid" id="posters-grid">
+                <!-- Posters will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Puzzle Edit Section -->
+        <section id="puzzle-edit-section" class="section">
+            <div class="section-header">
+                <button id="back-to-puzzles" class="back-button">← Back to Puzzles</button>
+                <h2>Edit Puzzle <span id="puzzle-edit-id"></span></h2>
+                <button id="save-puzzle" class="save-button">Save Changes</button>
+            </div>
+            
+            <div class="edit-container">
+                <div class="form-group">
+                    <label for="mashup-title">Mashup Title:</label>
+                    <input type="text" id="mashup-title" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="clue">Clue:</label>
+                    <input type="text" id="clue" class="form-control">
+                    <small>Use format like: [Movie 1999][TV Show 2010]</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="tagline">Tagline:</label>
+                    <input type="text" id="tagline" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="synopsis">Synopsis:</label>
+                    <textarea id="synopsis" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="credits">Credits:</label>
+                    <input type="text" id="credits" class="form-control">
+                </div>
+
+                <h3>Movies</h3>
+                <div id="movies-container">
+                    <!-- Movie inputs will be generated here -->
+                </div>
+
+                <h3>Posters</h3>
+                <div id="puzzle-posters" class="poster-preview">
+                    <!-- Posters will be displayed here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast message for notifications -->
+    <div id="toast" class="toast"></div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
