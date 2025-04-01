@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const startGameBtn = document.getElementById('start-game-btn');
     const revealAnswerBtn = document.getElementById('reveal-answer-btn');
     const nextPuzzleBtn = document.getElementById('next-puzzle-btn');
+    const prevPuzzleBtn = document.getElementById('prev-puzzle-btn');
+    const randomPuzzleBtn = document.getElementById('random-puzzle-btn');
     const answerModal = document.getElementById('answer-modal');
     const closeModalBtn = document.querySelector('.close-btn');
 
@@ -207,6 +209,130 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error fetching random puzzle:', error));
     }
 
+    // Function to load the next sequential puzzle
+    function loadNextPuzzle() {
+        if (isOffline) {
+            loadNextOfflinePuzzle();
+            return;
+        }
+
+        fetch(`/api/puzzle/${currentPuzzleId}/next`)
+            .then(response => response.json())
+            .then(puzzle => {
+                if (puzzle && puzzle.id) {
+                    currentPuzzle = puzzle;
+                    currentPuzzleId = puzzle.id;
+                    // Cache the puzzle data for offline use
+                    cachedPuzzles[puzzle.id] = puzzle;
+                    // Store in localStorage for persistent offline access
+                    try {
+                        localStorage.setItem('cachedPuzzles', JSON.stringify(cachedPuzzles));
+                    } catch (e) {
+                        console.warn('Failed to cache puzzle in localStorage:', e);
+                    }
+                    displayPuzzle(puzzle);
+                } else {
+                    // If no next puzzle, wrap around to the first one
+                    fetch('/api/puzzle/first')
+                        .then(response => response.json())
+                        .then(firstPuzzle => {
+                            currentPuzzle = firstPuzzle;
+                            currentPuzzleId = firstPuzzle.id;
+                            cachedPuzzles[firstPuzzle.id] = firstPuzzle;
+                            try {
+                                localStorage.setItem('cachedPuzzles', JSON.stringify(cachedPuzzles));
+                            } catch (e) {
+                                console.warn('Failed to cache puzzle in localStorage:', e);
+                            }
+                            displayPuzzle(firstPuzzle);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching first puzzle:', error);
+                            loadRandomPuzzle();
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching next puzzle:', error);
+                loadRandomPuzzle();
+            });
+    }
+
+    // Function to load the previous sequential puzzle
+    function loadPrevPuzzle() {
+        if (isOffline) {
+            loadPrevOfflinePuzzle();
+            return;
+        }
+
+        fetch(`/api/puzzle/${currentPuzzleId}/previous`)
+            .then(response => response.json())
+            .then(puzzle => {
+                if (puzzle && puzzle.id) {
+                    currentPuzzle = puzzle;
+                    currentPuzzleId = puzzle.id;
+                    // Cache the puzzle data for offline use
+                    cachedPuzzles[puzzle.id] = puzzle;
+                    // Store in localStorage for persistent offline access
+                    try {
+                        localStorage.setItem('cachedPuzzles', JSON.stringify(cachedPuzzles));
+                    } catch (e) {
+                        console.warn('Failed to cache puzzle in localStorage:', e);
+                    }
+                    displayPuzzle(puzzle);
+                } else {
+                    // If no previous puzzle, wrap around to the last one
+                    fetch('/api/puzzle/last')
+                        .then(response => response.json())
+                        .then(lastPuzzle => {
+                            currentPuzzle = lastPuzzle;
+                            currentPuzzleId = lastPuzzle.id;
+                            cachedPuzzles[lastPuzzle.id] = lastPuzzle;
+                            try {
+                                localStorage.setItem('cachedPuzzles', JSON.stringify(cachedPuzzles));
+                            } catch (e) {
+                                console.warn('Failed to cache puzzle in localStorage:', e);
+                            }
+                            displayPuzzle(lastPuzzle);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching last puzzle:', error);
+                            loadRandomPuzzle();
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching previous puzzle:', error);
+                loadRandomPuzzle();
+            });
+    }
+
+    // Helper function for offline next puzzle navigation
+    function loadNextOfflinePuzzle() {
+        const cachedIds = Object.keys(cachedPuzzles).map(Number).sort((a, b) => a - b);
+        if (cachedIds.length === 0) return;
+        
+        const currentIndex = cachedIds.indexOf(Number(currentPuzzleId));
+        const nextIndex = (currentIndex + 1) % cachedIds.length;
+        const nextId = cachedIds[nextIndex];
+        
+        currentPuzzleId = nextId;
+        handlePuzzleData(cachedPuzzles[nextId]);
+    }
+
+    // Helper function for offline previous puzzle navigation
+    function loadPrevOfflinePuzzle() {
+        const cachedIds = Object.keys(cachedPuzzles).map(Number).sort((a, b) => a - b);
+        if (cachedIds.length === 0) return;
+        
+        const currentIndex = cachedIds.indexOf(Number(currentPuzzleId));
+        const prevIndex = (currentIndex - 1 + cachedIds.length) % cachedIds.length;
+        const prevId = cachedIds[prevIndex];
+        
+        currentPuzzleId = prevId;
+        handlePuzzleData(cachedPuzzles[prevId]);
+    }
+
     // Function to handle puzzle data
     function handlePuzzleData(data) {
         puzzleData = data;
@@ -263,6 +389,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     nextPuzzleBtn.addEventListener('click', () => {
+        answerModal.classList.remove('active');
+        loadNextPuzzle();
+    });
+
+    prevPuzzleBtn.addEventListener('click', () => {
+        answerModal.classList.remove('active');
+        loadPrevPuzzle();
+    });
+
+    randomPuzzleBtn.addEventListener('click', () => {
         answerModal.classList.remove('active');
         loadRandomPuzzle();
     });

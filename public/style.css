@@ -533,6 +533,24 @@ body {
     }
 }
 
+/* Modal Buttons */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.button-group button {
+    flex: 1;
+    min-width: 0;
+}
+
+#next-puzzle-btn, #prev-puzzle-btn, #random-puzzle-btn {
+    margin-top: 0;
+}
+
 /* Footer */
 .footer {
     text-align: center;
