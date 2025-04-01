@@ -265,6 +265,302 @@ app.get('/api/puzzle/:id', (req, res) => {
   });
 });
 
+// Get the next active puzzle in sequence
+app.get('/api/puzzle/:id/next-active', (req, res) => {
+  const currentId = req.params.id;
+  
+  db.get(`
+    SELECT 
+      puzzles.id, puzzles.clue, puzzles.tagline, puzzles.synopsis, puzzles.credits, 
+      solutions.mashup_title 
+    FROM puzzles 
+    JOIN solutions ON puzzles.id = solutions.puzzle_id 
+    WHERE puzzles.is_active = 1 AND puzzles.id > ?
+    ORDER BY puzzles.id ASC
+    LIMIT 1
+  `, [currentId], (err, puzzle) => {
+    if (err) {
+      console.error('Error getting next active puzzle:', err.message);
+      return res.status(500).json({ error: 'Failed to get next active puzzle' });
+    }
+
+    if (!puzzle) {
+      return res.status(404).json({ error: 'No next active puzzle found' });
+    }
+
+    // Get the movies for this puzzle
+    db.all(`
+      SELECT movie_number, title, year, imdb_url 
+      FROM movies 
+      WHERE puzzle_id = ? 
+      ORDER BY movie_number
+    `, [puzzle.id], (err, movies) => {
+      if (err) {
+        console.error('Error getting puzzle movies:', err.message);
+        return res.status(500).json({ error: 'Failed to get puzzle movies' });
+      }
+
+      // Get the poster for this puzzle
+      db.get(`
+        SELECT filename
+        FROM posters
+        WHERE puzzle_id = ?
+        LIMIT 1
+      `, [puzzle.id], (err, poster) => {
+        if (err) {
+          console.error('Error getting puzzle poster:', err.message);
+          // Continue without poster if there's an error
+        }
+
+        // Construct the solution object
+        const solution = {
+          mashupTitle: puzzle.mashup_title
+        };
+
+        // Construct the response with all puzzle data
+        const puzzleData = {
+          id: puzzle.id,
+          clue: puzzle.clue,
+          tagline: puzzle.tagline || "",
+          synopsis: puzzle.synopsis || "",
+          credits: puzzle.credits || "",
+          posterUrl: poster ? `/posters/${poster.filename}` : null,
+          solution: solution,
+          movies: movies.map(movie => ({
+            number: movie.movie_number,
+            title: movie.title,
+            year: movie.year,
+            imdbUrl: movie.imdb_url
+          }))
+        };
+
+        res.json(puzzleData);
+      });
+    });
+  });
+});
+
+// Get the previous active puzzle in sequence
+app.get('/api/puzzle/:id/prev-active', (req, res) => {
+  const currentId = req.params.id;
+  
+  db.get(`
+    SELECT 
+      puzzles.id, puzzles.clue, puzzles.tagline, puzzles.synopsis, puzzles.credits, 
+      solutions.mashup_title 
+    FROM puzzles 
+    JOIN solutions ON puzzles.id = solutions.puzzle_id 
+    WHERE puzzles.is_active = 1 AND puzzles.id < ?
+    ORDER BY puzzles.id DESC
+    LIMIT 1
+  `, [currentId], (err, puzzle) => {
+    if (err) {
+      console.error('Error getting previous active puzzle:', err.message);
+      return res.status(500).json({ error: 'Failed to get previous active puzzle' });
+    }
+
+    if (!puzzle) {
+      return res.status(404).json({ error: 'No previous active puzzle found' });
+    }
+
+    // Get the movies for this puzzle
+    db.all(`
+      SELECT movie_number, title, year, imdb_url 
+      FROM movies 
+      WHERE puzzle_id = ? 
+      ORDER BY movie_number
+    `, [puzzle.id], (err, movies) => {
+      if (err) {
+        console.error('Error getting puzzle movies:', err.message);
+        return res.status(500).json({ error: 'Failed to get puzzle movies' });
+      }
+
+      // Get the poster for this puzzle
+      db.get(`
+        SELECT filename
+        FROM posters
+        WHERE puzzle_id = ?
+        LIMIT 1
+      `, [puzzle.id], (err, poster) => {
+        if (err) {
+          console.error('Error getting puzzle poster:', err.message);
+          // Continue without poster if there's an error
+        }
+
+        // Construct the solution object
+        const solution = {
+          mashupTitle: puzzle.mashup_title
+        };
+
+        // Construct the response with all puzzle data
+        const puzzleData = {
+          id: puzzle.id,
+          clue: puzzle.clue,
+          tagline: puzzle.tagline || "",
+          synopsis: puzzle.synopsis || "",
+          credits: puzzle.credits || "",
+          posterUrl: poster ? `/posters/${poster.filename}` : null,
+          solution: solution,
+          movies: movies.map(movie => ({
+            number: movie.movie_number,
+            title: movie.title,
+            year: movie.year,
+            imdbUrl: movie.imdb_url
+          }))
+        };
+
+        res.json(puzzleData);
+      });
+    });
+  });
+});
+
+// Get the first active puzzle by ID
+app.get('/api/puzzle/first-active', (req, res) => {
+  db.get(`
+    SELECT 
+      puzzles.id, puzzles.clue, puzzles.tagline, puzzles.synopsis, puzzles.credits, 
+      solutions.mashup_title 
+    FROM puzzles 
+    JOIN solutions ON puzzles.id = solutions.puzzle_id 
+    WHERE puzzles.is_active = 1
+    ORDER BY puzzles.id ASC
+    LIMIT 1
+  `, (err, puzzle) => {
+    if (err) {
+      console.error('Error getting first active puzzle:', err.message);
+      return res.status(500).json({ error: 'Failed to get first active puzzle' });
+    }
+
+    if (!puzzle) {
+      return res.status(404).json({ error: 'No active puzzles found' });
+    }
+
+    // Get the movies for this puzzle
+    db.all(`
+      SELECT movie_number, title, year, imdb_url 
+      FROM movies 
+      WHERE puzzle_id = ? 
+      ORDER BY movie_number
+    `, [puzzle.id], (err, movies) => {
+      if (err) {
+        console.error('Error getting puzzle movies:', err.message);
+        return res.status(500).json({ error: 'Failed to get puzzle movies' });
+      }
+
+      // Get the poster for this puzzle
+      db.get(`
+        SELECT filename
+        FROM posters
+        WHERE puzzle_id = ?
+        LIMIT 1
+      `, [puzzle.id], (err, poster) => {
+        if (err) {
+          console.error('Error getting puzzle poster:', err.message);
+          // Continue without poster if there's an error
+        }
+
+        // Construct the solution object
+        const solution = {
+          mashupTitle: puzzle.mashup_title
+        };
+
+        // Construct the response with all puzzle data
+        const puzzleData = {
+          id: puzzle.id,
+          clue: puzzle.clue,
+          tagline: puzzle.tagline || "",
+          synopsis: puzzle.synopsis || "",
+          credits: puzzle.credits || "",
+          posterUrl: poster ? `/posters/${poster.filename}` : null,
+          solution: solution,
+          movies: movies.map(movie => ({
+            number: movie.movie_number,
+            title: movie.title,
+            year: movie.year,
+            imdbUrl: movie.imdb_url
+          }))
+        };
+
+        res.json(puzzleData);
+      });
+    });
+  });
+});
+
+// Get the last active puzzle by ID
+app.get('/api/puzzle/last-active', (req, res) => {
+  db.get(`
+    SELECT 
+      puzzles.id, puzzles.clue, puzzles.tagline, puzzles.synopsis, puzzles.credits, 
+      solutions.mashup_title 
+    FROM puzzles 
+    JOIN solutions ON puzzles.id = solutions.puzzle_id 
+    WHERE puzzles.is_active = 1
+    ORDER BY puzzles.id DESC
+    LIMIT 1
+  `, (err, puzzle) => {
+    if (err) {
+      console.error('Error getting last active puzzle:', err.message);
+      return res.status(500).json({ error: 'Failed to get last active puzzle' });
+    }
+
+    if (!puzzle) {
+      return res.status(404).json({ error: 'No active puzzles found' });
+    }
+
+    // Get the movies for this puzzle
+    db.all(`
+      SELECT movie_number, title, year, imdb_url 
+      FROM movies 
+      WHERE puzzle_id = ? 
+      ORDER BY movie_number
+    `, [puzzle.id], (err, movies) => {
+      if (err) {
+        console.error('Error getting puzzle movies:', err.message);
+        return res.status(500).json({ error: 'Failed to get puzzle movies' });
+      }
+
+      // Get the poster for this puzzle
+      db.get(`
+        SELECT filename
+        FROM posters
+        WHERE puzzle_id = ?
+        LIMIT 1
+      `, [puzzle.id], (err, poster) => {
+        if (err) {
+          console.error('Error getting puzzle poster:', err.message);
+          // Continue without poster if there's an error
+        }
+
+        // Construct the solution object
+        const solution = {
+          mashupTitle: puzzle.mashup_title
+        };
+
+        // Construct the response with all puzzle data
+        const puzzleData = {
+          id: puzzle.id,
+          clue: puzzle.clue,
+          tagline: puzzle.tagline || "",
+          synopsis: puzzle.synopsis || "",
+          credits: puzzle.credits || "",
+          posterUrl: poster ? `/posters/${poster.filename}` : null,
+          solution: solution,
+          movies: movies.map(movie => ({
+            number: movie.movie_number,
+            title: movie.title,
+            year: movie.year,
+            imdbUrl: movie.imdb_url
+          }))
+        };
+
+        res.json(puzzleData);
+      });
+    });
+  });
+});
+
 // Admin API endpoints
 app.get('/api/admin/puzzles', (req, res) => {
   db.all(`

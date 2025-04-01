@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        fetch(`/api/puzzle/${currentPuzzleId}/next`)
+        fetch(`/api/puzzle/${currentPuzzleId}/next-active`)
             .then(response => response.json())
             .then(puzzle => {
                 if (puzzle && puzzle.id) {
@@ -232,8 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     displayPuzzle(puzzle);
                 } else {
-                    // If no next puzzle, wrap around to the first one
-                    fetch('/api/puzzle/first')
+                    // If no next active puzzle, wrap around to the first active one
+                    fetch('/api/puzzle/first-active')
                         .then(response => response.json())
                         .then(firstPuzzle => {
                             currentPuzzle = firstPuzzle;
@@ -247,13 +247,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             displayPuzzle(firstPuzzle);
                         })
                         .catch(error => {
-                            console.error('Error fetching first puzzle:', error);
+                            console.error('Error fetching first active puzzle:', error);
                             loadRandomPuzzle();
                         });
                 }
             })
             .catch(error => {
-                console.error('Error fetching next puzzle:', error);
+                console.error('Error fetching next active puzzle:', error);
                 loadRandomPuzzle();
             });
     }
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        fetch(`/api/puzzle/${currentPuzzleId}/previous`)
+        fetch(`/api/puzzle/${currentPuzzleId}/prev-active`)
             .then(response => response.json())
             .then(puzzle => {
                 if (puzzle && puzzle.id) {
@@ -281,8 +281,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     displayPuzzle(puzzle);
                 } else {
-                    // If no previous puzzle, wrap around to the last one
-                    fetch('/api/puzzle/last')
+                    // If no previous active puzzle, wrap around to the last active one
+                    fetch('/api/puzzle/last-active')
                         .then(response => response.json())
                         .then(lastPuzzle => {
                             currentPuzzle = lastPuzzle;
@@ -296,13 +296,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             displayPuzzle(lastPuzzle);
                         })
                         .catch(error => {
-                            console.error('Error fetching last puzzle:', error);
+                            console.error('Error fetching last active puzzle:', error);
                             loadRandomPuzzle();
                         });
                 }
             })
             .catch(error => {
-                console.error('Error fetching previous puzzle:', error);
+                console.error('Error fetching previous active puzzle:', error);
                 loadRandomPuzzle();
             });
     }
