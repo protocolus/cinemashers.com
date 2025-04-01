@@ -365,11 +365,30 @@ document.addEventListener('DOMContentLoaded', () => {
             mashupTitleEl.textContent = currentPuzzle.solution.mashupTitle;
             
             // Add IMDb links to the movie titles
-            answerMovie1El.innerHTML = `Movie 1: <a href="${currentPuzzle.solution.movie1.imdbUrl}" target="_blank">${currentPuzzle.solution.movie1.title}</a> (${currentPuzzle.solution.movie1.year})`;
-            answerMovie2El.innerHTML = `Movie 2: <a href="${currentPuzzle.solution.movie2.imdbUrl}" target="_blank">${currentPuzzle.solution.movie2.title}</a> (${currentPuzzle.solution.movie2.year})`;
+            if (currentPuzzle.movies && currentPuzzle.movies.length >= 2) {
+                // Using the movies array returned by the API
+                const movie1 = currentPuzzle.movies.find(m => m.number === 1) || currentPuzzle.movies[0];
+                const movie2 = currentPuzzle.movies.find(m => m.number === 2) || currentPuzzle.movies[1];
+                
+                answerMovie1El.innerHTML = `Movie 1: <a href="${movie1.imdbUrl}" target="_blank">${movie1.title}</a> (${movie1.year})`;
+                answerMovie2El.innerHTML = `Movie 2: <a href="${movie2.imdbUrl}" target="_blank">${movie2.title}</a> (${movie2.year})`;
+            } else if (currentPuzzle.solution && currentPuzzle.solution.movie1 && currentPuzzle.solution.movie2) {
+                // Fallback to old structure if still present
+                answerMovie1El.innerHTML = `Movie 1: <a href="${currentPuzzle.solution.movie1.imdbUrl}" target="_blank">${currentPuzzle.solution.movie1.title}</a> (${currentPuzzle.solution.movie1.year})`;
+                answerMovie2El.innerHTML = `Movie 2: <a href="${currentPuzzle.solution.movie2.imdbUrl}" target="_blank">${currentPuzzle.solution.movie2.title}</a> (${currentPuzzle.solution.movie2.year})`;
+            } else {
+                // Simple fallback if no movie data is available
+                answerMovie1El.textContent = "Movie 1: Information not available";
+                answerMovie2El.textContent = "Movie 2: Information not available";
+            }
             
             // Set the poster image if available
-            if (currentPuzzle.poster) {
+            if (currentPuzzle.posterUrl) {
+                posterImageEl.src = currentPuzzle.posterUrl;
+                posterImageEl.alt = `${currentPuzzle.solution.mashupTitle} Poster`;
+                posterImageEl.style.display = 'block';
+            } else if (currentPuzzle.poster) {
+                // Fallback to old structure if still present
                 posterImageEl.src = currentPuzzle.poster;
                 posterImageEl.alt = `${currentPuzzle.solution.mashupTitle} Poster`;
                 posterImageEl.style.display = 'block';
